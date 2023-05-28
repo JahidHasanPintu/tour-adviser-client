@@ -1,26 +1,68 @@
-import React from "react";
+import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
+import { getBaseURL } from "../../BaseURL/Baseurl";
+import {  toast } from 'react-toastify';
 
 const PopularPackageCardDetails = () => {
+  const location = useLocation();
+  const { tourPack } = location.state;
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    pickupPoint: '',
+    roomType: '',
+    numberOfPersons: '',
+  });
+
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [id]: value,
+    }));
+  };
+
+  const baseURL = getBaseURL();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    fetch(`${baseURL}/bookings`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        toast.success("Successfully Booked")
+      })
+      .catch((error) => {
+        // Handle any errors that occur during the request
+        console.error(error);
+      });
+  };
+
+
   return (
     <div>
       <div className="container">
         <div className="row">
           <div className="col-7">
-            <h3>SundarBan Fantastic Tour</h3>
+            <h3>{tourPack.title}</h3>
             <p style={{ textAlign: "justify" }}>
-              The Sundarbans is a mangrove forest located in Bangladesh,
-              specifically in the southwestern part of the country. It is one of
-              the largest continuous mangrove forests in the world and is
-              recognized as a UNESCO World Heritage Site.
+              {tourPack.details}
             </p>
             <img
               className="mt-3 rounded shadow"
               style={{ height: "250px", width: "450px" }}
-              src="https://img.freepik.com/free-photo/beautiful-axis-deer-from-sundarbans-tiger-reserve-india_475641-831.jpg?size=626&ext=jpg&ga=GA1.1.1270014827.1685105541&semt=sph"
+              src={tourPack.img}
               alt=""
             />
             <div className="mt-5">
-              <h3>Journey Date: 13 July 2023</h3>
+              <h3>Journey Date: {tourPack.date}</h3>
             </div>
             <div className="mt-5">
               <h4
@@ -129,14 +171,16 @@ const PopularPackageCardDetails = () => {
                 <h1>Booking Details</h1>
               </div>
               <div class="container">
-                <form>
+                <form onSubmit={handleSubmit}>
                   <div class="form-group mt-3">
-                    <label for="name">Name:</label>
+                    <label htmlFor="name">Name:</label>
                     <input
                       type="text"
                       class="form-control"
                       id="name"
                       placeholder="Enter your name"
+                      value={formData.name}
+                      onChange={handleInputChange}
                     />
                   </div>
                   <div class="form-group mt-3">
@@ -146,48 +190,55 @@ const PopularPackageCardDetails = () => {
                       class="form-control"
                       id="email"
                       placeholder="Enter your email"
+                      value={formData.email}
+                      onChange={handleInputChange}
                     />
                   </div>
                   <div class="form-group mt-3">
-                    <label for="number">Phone:</label>
+                    <label for="phone">Phone:</label>
                     <input
-                      type="number"
+                      type="phone"
                       class="form-control"
-                      id="number"
-                      placeholder="Enter your password"
+                      id="phone"
+                      placeholder="Enter your phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
                     />
                   </div>
+                  
                   <div class="form-group mt-3">
-                    <label for="location">Pickup Point:</label>
-                    <select class="form-control" id="location">
-                      <option value="option-0"></option>
-                      <option value="option1">Dhanmondi, Dhaka</option>
-                      <option value="option2">Shyamoli, Dhaka</option>
-                      <option value="option3">Chittgong</option>
-                      <option value="option4">Rajshahi</option>
-                      <option value="option-5">Khulna</option>
+                    <label for="pickupPoint">Pickup Point:</label>
+                    <select class="form-control" id="pickupPoint" value={formData.pickupPoint}
+                      onChange={handleInputChange}>
+                      <option value="Dhanmondi">Dhanmondi</option>
+                      <option value="Shymoli">Shymoli</option>
+                      <option value="Gulistan">Gulistan</option>
+                      <option value="Sayedabad">Sayedabad</option>
                     </select>
                   </div>
                   <div class="form-group mt-3">
                     <label for="roomType">Room Type:</label>
-                    <select class="form-control" id="roomType">
+                    <select class="form-control" id="roomType" value={formData.roomType}
+                      onChange={handleInputChange}>
                       <option value="option0"></option>
-                      <option value="option1">Couple</option>
-                      <option value="option2">Single</option>
-                      <option value="option3">Family</option>
+                      <option value="couple">Couple</option>
+                      <option value="single">Single</option>
+                      <option value="family">Family</option>
                     </select>
                   </div>
                   <div class="form-group mt-3">
-                    <label for="persons">Number of Persons:</label>
+                    <label for="numberOfPersons">Number of persons:</label>
                     <input
-                      type="number"
+                      type="numberOfPersons"
                       class="form-control"
-                      id="persons"
-                      placeholder="Enter number of persons"
+                      id="numberOfPersons"
+                      placeholder="Enter your numberOfPersons"
+                      value={formData.numberOfPersons}
+                      onChange={handleInputChange}
                     />
                   </div>
                   <button type="submit" class="btn btn-primary mt-3 w-100 ">
-                    Book
+                    Book Now
                   </button>
                 </form>
                 <div>

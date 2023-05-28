@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import PopularPackageCard from "../PopularPackageCard/PopularPackageCard";
+import { getBaseURL } from "../../BaseURL/Baseurl";
 
 const PopularPackageCards = () => {
   const [packages, setPackages] = useState([]);
+  const baseURL = getBaseURL();
   useEffect(() => {
-    fetch("PopularPackageData.json")
+    fetch(`${baseURL}/tourpackages`)
       .then((res) => res.json())
       .then((data) => setPackages(data));
   }, []);
@@ -15,7 +17,7 @@ const PopularPackageCards = () => {
         <div className="row">
           {packages.map((tourPackage) => (
             <div className="col-4">
-              <PopularPackageCard key={tourPackage.id} data={tourPackage} />
+              <PopularPackageCard key={tourPackage._id} data={tourPackage} />
             </div>
           ))}
         </div>

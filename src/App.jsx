@@ -9,6 +9,9 @@ import SignUp from "./Components/Acount/SignUp";
 import Hotels from "./Components/Hotel/Hotels";
 import TourPackages from "./Components/TourPackages/TourPackages";
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 function App() {
   return (
     <>
@@ -27,8 +30,13 @@ function App() {
           path="/packageDetails"
           element={<PopularPackageCardDetails />}
         ></Route>
+        <Route
+          path="/packageDetails/:packID"
+          element={<PopularPackageCardDetails />}
+        ></Route>
         <Route path="/packages" element={<TourPackages />}></Route>
       </Routes>
+      <ToastContainer />
     </>
   );
 }
